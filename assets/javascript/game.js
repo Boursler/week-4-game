@@ -24,5 +24,27 @@ function Character(healthPower, attackPower, counterAttackPower) {
 		}
 	}
 }
+//eventually, clicking your character will run the constructor on that character and set playerCharacter or enemyCharacter equal to their object
 var playerCharacter;
+var enemyCharacter;
 var defenderList = [];
+///argggh does javascript have classes jsdlkjfsladkjfalskjdf
+function isRoundOver() {
+	if (enemyCharacter.healthPower <= 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+function isGameOver() {
+	if (playerCharacter.healthPower <= 0) {
+		return true;
+	}
+	else if (defenderList.length === 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
