@@ -109,20 +109,25 @@ function chooseCharacter(char) {
 }
 chooseCharacter(char3);
 var appearance = {
+	enemyCharacter: new Character("char1", 50, 10, 20),
+	playerCharacter: new Character("char2", 100, 15, 10),
 	// assignCharacter: function () {
 	// 	for(var i=0; i< defenderList.length; i++){
 
 	// 	}
 	// }
 	printAttack: function () {
-		var enemyCharacter = new Character("char1", 50, 10, 20);
-		var playerCharacter = new Character("char2", 100, 15, 10);
-		$("#attackStats").text(playerCharacter.name + " did " + playerCharacter.attackPower + " damage against " + enemyCharacter.name + "." + " In return, " + enemyCharacter.name + " did " + enemyCharacter.counterAttackPower + " damage against " + playerCharacter.name + ".")
+
+		$("#attackStats").text(this.playerCharacter.name + " did " + this.playerCharacter.attackPower + " damage against " + this.enemyCharacter.name + "." + " In return, " + this.enemyCharacter.name + " did " + this.enemyCharacter.counterAttackPower + " damage against " + this.playerCharacter.name + ".")
 	},
+	printHealth: function () {
+		$("#playerCharacter").append("<p>" + this.playerCharacter.healthPower + "</p>");
+		$("#enemyCharacter").append("<p>" + this.enemyCharacter.healthPower + "</p>");
+	}
 
 }
-console.log("appearanace test " + appearance.char1);
-appearance.printAttack();
+
+appearance.printHealth();
 
 
 $(document).ready(function () {
