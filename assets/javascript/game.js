@@ -45,9 +45,13 @@ function playGame() {
 }
 function initGame(char) {
 	//game starts with full defender list and beginning stats
+
+}
+function chooseCharacter() {
 	var remove = defenderList.indexOf(char);
-	defenderList.splice(remove, 1);
+	playerCharacter = defenderList.splice(remove, 1);
 	console.log(defenderList);
+	console.log(playerCharacter);
 }
 initGame(char3);
 //this is a constructor. Each individual character will be constructed from this blueprint
