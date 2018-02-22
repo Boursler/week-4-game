@@ -4,6 +4,7 @@ var playerCharacter = [];
 var enemyCharacter;
 
 function Character(name, healthPower, attackPower, counterAttackPower) {
+	//this is a constructor. Each individual character will be constructed from this blueprint
 	//characters have health, attackpower, counterattackpower properties
 	//characters have attack, counterattack, healthloss methods
 	this.name = name;
@@ -14,7 +15,7 @@ function Character(name, healthPower, attackPower, counterAttackPower) {
 	this.attack = function () {
 		//attack! returns attack value
 		this.attackCount++;
-		return this.attackPower * this.attackCount;
+		return this.attackPower *= this.attackCount;
 	};
 	this.counterAttack = function () {
 		//attack back! returns counter attack value
@@ -49,7 +50,15 @@ function isGameOver() {
 	if (playerCharacter.healthPower <= 0) {
 		return true;
 	}
-	else if (defenderList.length === 0) {
+	else if (didYouWin()) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+function didYouWin() {
+	if (defenderList.length === 0) {
 		return true;
 	}
 	else {
@@ -73,6 +82,13 @@ function playGame() {
 }
 function initGame() {
 	//game starts with full defender list and beginning stats
+	playerCharacter = [];
+	char1 = new Character("char1", 50, 5, 10);
+	char2 = new Character("char2", 70, 15, 20);
+	char3 = new Character("char3", 200, 20, 500);
+	char4 = new Character("char4", 15, 20, 5);
+	defenderList = [char1, char2, char3, char4];
+	chooseCharacter(char);
 
 }
 function chooseCharacter(char) {
@@ -92,7 +108,7 @@ function chooseCharacter(char) {
 	}
 }
 chooseCharacter(char3);
-//this is a constructor. Each individual character will be constructed from this blueprint
+
 
 
 
