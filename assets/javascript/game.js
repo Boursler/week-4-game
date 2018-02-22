@@ -112,11 +112,25 @@ chooseCharacter(char3);
 var appearance = {
 	enemyCharacter: new Character("char1", 50, 10, 20),
 	playerCharacter: new Character("char2", 100, 15, 10),
-	// assignCharacter: function () {
-	// 	for(var i=0; i< defenderList.length; i++){
+	assignPlayerCharacter: $("p").click(function () {
+		//if click on something in characterDiv, it goes to playerCharacter area
+		//if click on something in defender area, it goes to enemyCharacter area
 
-	// 	}
-	// }
+		if ($(this).parent().attr("id") === $("#characterDiv").attr("id")) {
+			$("#playerCharacter").append($(this));
+			var defenders = $("#characterDiv").children();
+			$("#defenderArea").append(defenders);
+
+		}
+
+	}),
+	assignEnemyCharacter: $("p").click(function () {
+		console.log($(this).parent().attr("id"));
+		if ($(this).parent().attr("id") === $("defenderArea").attr("id")) {
+			console.log("hello world");
+			$("#enemyCharacter").append($(this));
+		}
+	}),
 	printAttack: function () {
 
 		$("#attackStats").text(this.playerCharacter.name + " did " + this.playerCharacter.attackPower + " damage against " + this.enemyCharacter.name + "." + " In return, " + this.enemyCharacter.name + " did " + this.enemyCharacter.counterAttackPower + " damage against " + this.playerCharacter.name + ".")
