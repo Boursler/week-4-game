@@ -126,8 +126,7 @@ var appearance = {
 	}),
 	assignEnemyCharacter: $("p").click(function () {
 		console.log($(this).parent().attr("id"));
-		if ($(this).parent().attr("id") === $("defenderArea").attr("id")) {
-			console.log("hello world");
+		if ($(this).parent().attr("id") === $("#defenderArea").attr("id")) {
 			$("#enemyCharacter").append($(this));
 		}
 	}),
