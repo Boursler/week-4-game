@@ -64,6 +64,7 @@ function didYouWin() {
 	else {
 		return false;
 	}
+
 }
 function playGame() {
 	enemyCharacter.healthLoss(playerCharacter.attack());
@@ -123,11 +124,17 @@ var appearance = {
 	printHealth: function () {
 		$("#playerCharacter").append("<p>" + this.playerCharacter.healthPower + "</p>");
 		$("#enemyCharacter").append("<p>" + this.enemyCharacter.healthPower + "</p>");
+	},
+	printWin: function () {
+		if (didYouWin()) {
+			$("#gameState").prepend("Yay, you won! The world is safe!");
+		}
 	}
 
 }
 
 appearance.printHealth();
+appearance.printWin();
 
 
 $(document).ready(function () {
