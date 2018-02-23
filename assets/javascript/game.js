@@ -30,13 +30,12 @@ function Character(name, healthPower, attackPower, counterAttackPower) {
 		}
 	}
 }
-var char1 = new Character("char1", 50, 5, 10);
+var char1 = new Character("char1", -1, 5, 10);
 var char2 = new Character("char2", 70, 15, 20);
 var char3 = new Character("char3", 200, 20, 500);
 var char4 = new Character("char4", 15, 20, 5);
 var defenderList = [char1, char2, char3, char4];
-console.log("starting defender list " + defenderList);
-console.log("here's a name " + char2.name);
+
 function isRoundOver() {
 	if (enemyCharacter.healthPower <= 0) {
 		return true;
@@ -66,19 +65,18 @@ function didYouWin() {
 	}
 
 }
-function playGame() {
+function attackRound() {
 	enemyCharacter.healthLoss(playerCharacter.attack());
-	playerCharacter.healthLoss(enemyCharacter.attack());
-	if (isRoundOver()) {
+	if (!isRoundOver()) {
+		playerCharacter.healthLoss(enemyCharacter.counterAttack());
+	}
+	else {
 		if (!isGameOver()) {
 			chooseCharacter(char);
 		}
 		else {
 			//keep going
 		}
-	}
-	else {
-		initGame();
 	}
 }
 function initGame() {
@@ -92,46 +90,61 @@ function initGame() {
 	chooseCharacter(char);
 
 }
-function chooseCharacter(char) {
+function choosePlayerCharacter(char, remove) {
 	//if a good guy has not been chosen yet, character is good guy
-	var remove = defenderList.indexOf(char);
-	if (playerCharacter.length === 0) {
-		playerCharacter = defenderList.splice(remove, 1);
-		playerCharacter = playerCharacter[0];
-		console.log(defenderList);
-		console.log(playerCharacter);
-	}
-	else {
-		//otherwise, bad guy
-		enemyCharacter = defenderList.splice(remove, 1);
-		enemyCharacter = enemyCharacter[0];
-		console.log(enemyCharacter);
-	}
+	playerCharacter = defenderList.splice(remove, 1);
+	playerCharacter = playerCharacter[0];
+
 }
-chooseCharacter(char3);
+function chooseEnemyCharacter(eChar, remove) {
+	enemyCharacter = defenderList.splice(remove, 1);
+	enemyCharacter = enemyCharacter[0];
+
+}
+function indexToRemove(char) {
+	var remove;
+	for (var i = 0; i < defenderList.length; i++) {
+		if (defenderList[i].name === char) {
+			remove = i;
+		}
+	}
+	return remove;
+};
+
 var appearance = {
-	enemyCharacter: new Character("char1", 50, 10, 20),
-	playerCharacter: new Character("char2", 100, 15, 10),
+
+
 	assignPlayerCharacter: $("p").click(function () {
 		//if click on something in characterDiv, it goes to playerCharacter area
 		//if click on something in defender area, it goes to enemyCharacter area
 
 		if ($(this).parent().attr("id") === $("#characterDiv").attr("id")) {
 			$("#playerCharacter").append($(this));
+			//call choosecharacter maybe
+			var char = $(this).text();
+			choosePlayerCharacter(char, indexToRemove(char));
 			var defenders = $("#characterDiv").children();
 			$("#defenderArea").append(defenders);
-
 		}
-
 	}),
 	assignEnemyCharacter: $("p").click(function () {
-		console.log($(this).parent().attr("id"));
+
 		if ($(this).parent().attr("id") === $("#defenderArea").attr("id")) {
 			$("#enemyCharacter").append($(this));
+			var eChar = $(this).text();
+			chooseEnemyCharacter(eChar, indexToRemove(eChar));
+			console.log(enemyCharacter.name + " enemyCharacter");
 		}
 	}),
-	printAttack: function () {
 
+	removeEnemyCharacter:
+		$("#resetButton").click(function () {
+			if (enemyCharacter.healthPower <= 0) {
+				$("#enemyCharacter").children().empty();
+			}
+		}),
+
+	printAttack: function () {
 		$("#attackStats").text(this.playerCharacter.name + " did " + this.playerCharacter.attackPower + " damage against " + this.enemyCharacter.name + "." + " In return, " + this.enemyCharacter.name + " did " + this.enemyCharacter.counterAttackPower + " damage against " + this.playerCharacter.name + ".")
 	},
 	printHealth: function () {
@@ -143,11 +156,12 @@ var appearance = {
 			$("#gameState").prepend("Yay, you won! The world is safe!");
 		}
 	}
+	//on click run attack function
+	//onclick init game function
 
 }
 
-appearance.printHealth();
-appearance.printWin();
+
 
 
 $(document).ready(function () {
