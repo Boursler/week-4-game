@@ -2,6 +2,7 @@
 //eventually, clicking your character will run the constructor on that character and set playerCharacter or enemyCharacter equal to their object//end game conditions
 var playerCharacter = 0;
 var enemyCharacter = 0;
+var deadCharacter = 0;
 
 function Character(name, healthPower, attackPower, counterAttackPower) {
 	//this is a constructor. Each individual character will be constructed from this blueprint
@@ -10,12 +11,14 @@ function Character(name, healthPower, attackPower, counterAttackPower) {
 	this.name = name;
 	this.healthPower = healthPower;
 	this.attackPower = attackPower;
+	this.newAttackPower = attackPower;
 	this.attackCount = 0;
 	this.counterAttackPower = counterAttackPower;
 	this.attack = function () {
 		//attack! returns attack value
 		this.attackCount++;
-		return this.attackPower * this.attackCount;
+		this.newAttackPower = this.attackPower * this.attackCount;
+		return this.newAttackPower;
 	};
 	this.counterAttack = function () {
 		//attack back! returns counter attack value
@@ -96,13 +99,16 @@ function attackRound() {
 	if (!isRoundOver()) {
 		playerCharacter.healthLoss(enemyCharacter.counterAttack());
 		if (playerCharacter.healthPower <= 0) {
+			deadCharacter = playerCharacter;
 			playerCharacter = 0;
+			console.log(deadCharacter.name + "dead character");
 		}
 
 		console.log(playerCharacter.healthPower + "player character health");
 	}
 	else {
 		if (enemyCharacter.healthPower <= 0) {
+			deadCharacter = enemyCharacter;
 			enemyCharacter = 0;
 		}
 		else {
@@ -114,6 +120,7 @@ function initGame() {
 	//game starts with full defender list and beginning stats
 	playerCharacter = 0;
 	enemyCharacter = 0;
+	deadCharacter = 0;
 	char1 = new Character("char1", 50, 5, 10);
 	char2 = new Character("char2", 70, 15, 20);
 	char3 = new Character("char3", 200, 20, 500);
@@ -170,15 +177,26 @@ var appearance = {
 	attackStage() {
 		attackRound();
 		displayGame();
+		appearance.printAttack();
 
 	},
+
 	printAttack: function () {
-		$("#attackStats").text(playerCharacter.name + " did " + playerCharacter.attackPower + " damage against " + enemyCharacter.name + "." + " In return, " + enemyCharacter.name + " did " + enemyCharacter.counterAttackPower + " damage against " + playerCharacter.name + ".")
+
+		if (playerCharacter === 0) {
+			$("#attackStats").text(deadCharacter.name + " did " + deadCharacter.newAttackPower + " damage against " + enemyCharacter.name + "." + " In return, " + enemyCharacter.name + " did " + enemyCharacter.counterAttackPower + " damage against " + deadCharacter.name + ".");
+		}
+		else if (enemyCharacter === 0) {
+			$("#attackStats").text(playerCharacter.name + " did " + playerCharacter.newAttackPower + " damage against " + deadCharacter.name + ".");
+		}
+		else {
+			$("#attackStats").text(playerCharacter.name + " did " + playerCharacter.newAttackPower + " damage against " + enemyCharacter.name + "." + " In return, " + enemyCharacter.name + " did " + enemyCharacter.counterAttackPower + " damage against " + playerCharacter.name + ".")
+		}
 	},
 
 	printHealth: function () {
-		$("#playerCharacter").append("<p>" + playerCharacter.healthPower + "</p>");
-		$("#enemyCharacter").append("<p>" + enemyCharacter.healthPower + "</p>");
+		$("#playerCharacter").html("<p>" + playerCharacter.healthPower + "</p>");
+		$("#enemyCharacter").html("<p>" + enemyCharacter.healthPower + "</p>");
 	},
 
 	printWin: function () {
@@ -199,6 +217,7 @@ function displayGame() {
 	$("#gameState").empty();
 	$("#defenderArea").empty();
 	$("#characterDiv").empty();
+	$("#attackStats").empty();
 	for (var i = 0; i < defenderList.length; i++) {
 		if (isGameInit()) {
 			$("#characterDiv").append("<p>" + defenderList[i].name + "</p>");
@@ -211,21 +230,24 @@ function displayGame() {
 		else if (isAttackStage()) {
 
 			$("#defenderArea").append("<p>" + defenderList[i].name + "</p>");
+
 		}
 		if (isGameOver() && !didYouWin()) {
 			$("#defenderArea").append("<p>" + defenderList[i].name + "</p>");
 		}
 	}
 	setUpActions();
-
-	// appearance.printAttack();
 	appearance.printHealth();
 	if (isGameInit()) {
 		$("#playerCharacter").text("");
 	}
 	else {
-
-		$("#playerCharacter").text(playerCharacter.name);
+		if (playerCharacter === 0) {
+			$("#playerCharacter").text(deadCharacter.name);
+		}
+		else {
+			$("#playerCharacter").text(playerCharacter.name);
+		}
 	}
 	if (enemyCharacter !== 0) {
 		$("#enemyCharacter").text(enemyCharacter.name);
