@@ -186,6 +186,9 @@ var appearance = {
 		$("#gameState").prepend("Yay, you won! The world is safe!");
 
 	},
+	printLoss: function () {
+		$("#gameState").prepend("Oh no, you lost!");
+	}
 	//on click run attack function
 	//onclick init game function
 
@@ -209,16 +212,20 @@ function displayGame() {
 
 			$("#defenderArea").append("<p>" + defenderList[i].name + "</p>");
 		}
+		if (isGameOver() && !didYouWin()) {
+			$("#defenderArea").append("<p>" + defenderList[i].name + "</p>");
+		}
 	}
 	setUpActions();
 
 	// appearance.printAttack();
 	appearance.printHealth();
-	if (playerCharacter !== 0) {
-		$("#playerCharacter").text(playerCharacter.name);
+	if (isGameInit()) {
+		$("#playerCharacter").text("");
 	}
 	else {
-		$("#playerCharacter").text("");
+
+		$("#playerCharacter").text(playerCharacter.name);
 	}
 	if (enemyCharacter !== 0) {
 		$("#enemyCharacter").text(enemyCharacter.name);
@@ -229,6 +236,9 @@ function displayGame() {
 
 	if (didYouWin()) {
 		appearance.printWin();
+	}
+	if (isGameOver() && !didYouWin()) {
+		appearance.printLoss();
 	}
 }
 
