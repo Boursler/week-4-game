@@ -128,24 +128,31 @@ function initGame() {
 	defenderList = [char1, char2, char3, char4];
 }
 
-function choosePlayerCharacter(char, remove) {
+function choosePlayerCharacter(remove) {
 	//if a good guy has not been chosen yet, character is good guy
 	playerCharacter = defenderList.splice(remove, 1);
 	playerCharacter = playerCharacter[0];
+	console.log(playerCharacter.name + "choosePlayerCharacter choice");
 }
 
-function chooseEnemyCharacter(eChar, remove) {
+function chooseEnemyCharacter(remove) {
 	enemyCharacter = defenderList.splice(remove, 1);
 	enemyCharacter = enemyCharacter[0];
 }
 
 function indexToRemove(char) {
 	var remove;
+	console.log(typeof (char) + "type of char and char is " + char);
 	for (var i = 0; i < defenderList.length; i++) {
+		// console.log(defenderList[i].name + "defenderList stuff that's going on" + typeof (defenderList[i].name));
+		console.log(defenderList[i].name + " === " + char);
+		// console.log(typeof (defenderList[i].name + ))
+		console.log(defenderList[i].name === char);
 		if (defenderList[i].name === char) {
 			remove = i;
 		}
 	}
+	console.log(remove + " removed index");
 	return remove;
 };
 
@@ -153,6 +160,13 @@ var appearance = {
 	initDisplay: function () {
 		initGame();
 		displayGame();
+	},
+	printCharacter: function (id, character, classKey) {
+		id.html(appearance.printCharacterDiv(character, classKey));
+
+	},
+	printCharacterDiv: function (character, classKey) {
+		return "<div class=" + classKey + "> <div class=charName>" + character.name + "</div>" + "<div class=charhealth>" + character.healthPower + "</div></div>";
 	},
 	assignPlayerCharacter: function () {
 
@@ -162,15 +176,17 @@ var appearance = {
 		if ($(this).parent().attr("id") === $("#characterDiv").attr("id")) {
 
 			//call choosecharacter maybe
-			var char = $(this).text();
-			choosePlayerCharacter(char, indexToRemove(char));
+			var char = $(this).find(".charName").text();
+			console.log(char + "character choice");
+			choosePlayerCharacter(indexToRemove(char));
 			displayGame();
 		}
 	},
 
 	assignEnemyCharacter: function () {
-		var eChar = $(this).text();
-		chooseEnemyCharacter(eChar, indexToRemove(eChar));
+		var eChar = $(this).find(".charName").text();
+		chooseEnemyCharacter(indexToRemove(eChar));
+		console.log(enemyCharacter.name + " enemy character choice");
 		displayGame();
 	},
 
@@ -217,10 +233,12 @@ function displayGame() {
 	$("#attackStats").empty();
 	for (var i = 0; i < defenderList.length; i++) {
 		if (isGameInit()) {
-			$("#characterDiv").append("<p>" + defenderList[i].name + " " + defenderList[i].healthPower + "</p>");
+
+
+			$("#characterDiv").append(appearance.printCharacterDiv(defenderList[i], "defender"));
 		}
 		else {
-			$("#defenderArea").append("<p>" + defenderList[i].name + " " + defenderList[i].healthPower + "</p>");
+			$("#defenderArea").append(appearance.printCharacterDiv(defenderList[i], "defender"));
 		}
 	}
 	setUpActions();
@@ -230,14 +248,15 @@ function displayGame() {
 	}
 	else {
 		if (playerCharacter === 0) {
-			$("#playerCharacter").text(deadCharacter.name + " " + deadCharacter.healthPower);
+			appearance.printCharacter($("#playerCharacter"), deadCharacter, "playerChar");
 		}
 		else {
-			$("#playerCharacter").text(playerCharacter.name + " " + playerCharacter.healthPower);
+
+			appearance.printCharacter($("#playerCharacter"), playerCharacter, "playerChar");
 		}
 	}
 	if (enemyCharacter !== 0) {
-		$("#enemyCharacter").text(enemyCharacter.name + " " + enemyCharacter.healthPower);
+		appearance.printCharacter($("#enemyCharacter"), enemyCharacter, "enemyChar");
 	}
 	else {
 		$("#enemyCharacter").text("");
@@ -252,17 +271,17 @@ function displayGame() {
 }
 
 function setUpActions() {
-	$("p").off("click");
+	$(".defender").off("click");
 	$("#attackButton").off("click");
 	$("#resetButton").click(appearance.initDisplay);
 	console.log("hello world");
 	if (isGameInit()) {
-		$("p").click(appearance.assignPlayerCharacter);
+		$(".defender").click(appearance.assignPlayerCharacter);
 		console.log(isGameInit() + " isGameInit stage");
 	}
 	else if (isPickEnemy()) {
 		console.log(isPickEnemy() + " isPickEnemy state?")
-		$("p").click(appearance.assignEnemyCharacter);
+		$(".defender").click(appearance.assignEnemyCharacter);
 	}
 	else if (isAttackStage()) {
 		console.log(isAttackStage() + " isAttack stage")
