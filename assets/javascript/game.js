@@ -194,10 +194,7 @@ var appearance = {
 		}
 	},
 
-	printHealth: function () {
-		$("#playerCharacter").html("<p>" + playerCharacter.healthPower + "</p>");
-		$("#enemyCharacter").html("<p>" + enemyCharacter.healthPower + "</p>");
-	},
+
 
 	printWin: function () {
 
@@ -213,44 +210,34 @@ var appearance = {
 }
 function displayGame() {
 	$("#enemyCharacter").children().empty();
-	// appearance.printHealth.empty();
+
 	$("#gameState").empty();
 	$("#defenderArea").empty();
 	$("#characterDiv").empty();
 	$("#attackStats").empty();
 	for (var i = 0; i < defenderList.length; i++) {
 		if (isGameInit()) {
-			$("#characterDiv").append("<p>" + defenderList[i].name + "</p>");
+			$("#characterDiv").append("<p>" + defenderList[i].name + " " + defenderList[i].healthPower + "</p>");
 		}
-		else if (isPickEnemy()) {
-
-			$("#defenderArea").append("<p>" + defenderList[i].name + "</p>");
-			console.log("defender list at " + i);
-		}
-		else if (isAttackStage()) {
-
-			$("#defenderArea").append("<p>" + defenderList[i].name + "</p>");
-
-		}
-		if (isGameOver() && !didYouWin()) {
-			$("#defenderArea").append("<p>" + defenderList[i].name + "</p>");
+		else {
+			$("#defenderArea").append("<p>" + defenderList[i].name + " " + defenderList[i].healthPower + "</p>");
 		}
 	}
 	setUpActions();
-	appearance.printHealth();
+
 	if (isGameInit()) {
 		$("#playerCharacter").text("");
 	}
 	else {
 		if (playerCharacter === 0) {
-			$("#playerCharacter").text(deadCharacter.name);
+			$("#playerCharacter").text(deadCharacter.name + " " + deadCharacter.healthPower);
 		}
 		else {
-			$("#playerCharacter").text(playerCharacter.name);
+			$("#playerCharacter").text(playerCharacter.name + " " + playerCharacter.healthPower);
 		}
 	}
 	if (enemyCharacter !== 0) {
-		$("#enemyCharacter").text(enemyCharacter.name);
+		$("#enemyCharacter").text(enemyCharacter.name + " " + enemyCharacter.healthPower);
 	}
 	else {
 		$("#enemyCharacter").text("");
