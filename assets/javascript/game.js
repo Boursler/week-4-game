@@ -3,8 +3,12 @@
 var playerCharacter = 0;
 var enemyCharacter = 0;
 var deadCharacter = 0;
+var char1;
+var char2;
+var char3;
+var char4;
 
-function Character(name, healthPower, attackPower, counterAttackPower) {
+function Character(name, healthPower, attackPower, counterAttackPower, image) {
 	//this is a constructor. Each individual character will be constructed from this blueprint
 	//characters have health, attackpower, counterattackpower properties
 	//characters have attack, counterattack, healthloss methods
@@ -14,6 +18,7 @@ function Character(name, healthPower, attackPower, counterAttackPower) {
 	this.newAttackPower = attackPower;
 	this.attackCount = 0;
 	this.counterAttackPower = counterAttackPower;
+	this.image = image;
 	this.attack = function () {
 		//attack! returns attack value
 		this.attackCount++;
@@ -33,10 +38,7 @@ function Character(name, healthPower, attackPower, counterAttackPower) {
 		}
 	}
 }
-var char1 = new Character("char1", -1, 5, 10);
-var char2 = new Character("char2", 70, 15, 20);
-var char3 = new Character("char3", 200, 20, 500);
-var char4 = new Character("char4", 15, 20, 5);
+
 var defenderList = [char1, char2, char3, char4];
 
 function isRoundOver() {
@@ -121,10 +123,10 @@ function initGame() {
 	playerCharacter = 0;
 	enemyCharacter = 0;
 	deadCharacter = 0;
-	char1 = new Character("char1", 50, 5, 10);
-	char2 = new Character("char2", 70, 15, 20);
-	char3 = new Character("char3", 200, 20, 500);
-	char4 = new Character("char4", 15, 20, 5);
+	char1 = new Character("Jon Snow", -1, 5, 10, "assets/images/jonsnow.jpg");
+	char2 = new Character("Daenerys Targaryen", 70, 15, 20, "assets/images/daenerysimage.jpeg");
+	char3 = new Character("White Walker", 200, 20, 500, "assets/images/white_walker.jpg");
+	char4 = new Character("Jaime Lannister", 15, 20, 5, "assets/images/jaimelannister.jpg");
 	defenderList = [char1, char2, char3, char4];
 }
 
@@ -134,6 +136,7 @@ function choosePlayerCharacter(remove) {
 	playerCharacter = playerCharacter[0];
 	console.log(playerCharacter.name + "choosePlayerCharacter choice");
 }
+
 
 function chooseEnemyCharacter(remove) {
 	enemyCharacter = defenderList.splice(remove, 1);
@@ -164,9 +167,10 @@ var appearance = {
 	printCharacter: function (id, character, classKey) {
 		id.html(appearance.printCharacterDiv(character, classKey));
 
+
 	},
 	printCharacterDiv: function (character, classKey) {
-		return "<div class=" + classKey + "> <div class=charName>" + character.name + "</div>" + "<div class=charhealth>" + character.healthPower + "</div></div>";
+		return "<div class='" + classKey + " card'> <img src='" + character.image + "'/><div class=charName>" + character.name + "</div>" + "<div class=charhealth>" + character.healthPower + "</div></div>";
 	},
 	assignPlayerCharacter: function () {
 
@@ -233,8 +237,6 @@ function displayGame() {
 	$("#attackStats").empty();
 	for (var i = 0; i < defenderList.length; i++) {
 		if (isGameInit()) {
-
-
 			$("#characterDiv").append(appearance.printCharacterDiv(defenderList[i], "defender"));
 		}
 		else {

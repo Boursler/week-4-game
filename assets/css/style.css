@@ -1,0 +1,43 @@
+*{
+	box-sizing: border-box;
+}
+.container{
+    max-width: 960px;
+    width: 960px;
+    display: block;
+    margin: auto;
+    height: 100%;
+
+}
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.jumbotron{
+    padding: 2rem 1rem;
+}
+img{
+    height: 200px;
+    width: 150px;
+}
+.card{
+    float: left;
+}
+.defender{
+    margin: 10px;
+}
+.characterHeader{
+    text-align: center;
+}
+
+.btn{
+    margin: auto;
+}
+#attackButton{
+    margin-right: 5px;
+}
+#stats{
+    height: 50px;
+}
