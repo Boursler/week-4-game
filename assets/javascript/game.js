@@ -1,5 +1,5 @@
 
-//eventually, clicking your character will run the constructor on that character and set playerCharacter or enemyCharacter equal to their object//end game conditions
+//set characters globally
 var playerCharacter = 0;
 var enemyCharacter = 0;
 var deadCharacter = 0;
@@ -7,10 +7,12 @@ var char1;
 var char2;
 var char3;
 var char4;
+//globally defined array of characters
+var defenderList = [char1, char2, char3, char4];
 
 function Character(name, healthPower, attackPower, counterAttackPower, image) {
 	//this is a constructor. Each individual character will be constructed from this blueprint
-	//characters have health, attackpower, counterattackpower properties
+	//characters have name, health, attackpower, counterattackpower, image properties
 	//characters have attack, counterattack, healthloss methods
 	this.name = name;
 	this.healthPower = healthPower;
@@ -38,10 +40,9 @@ function Character(name, healthPower, attackPower, counterAttackPower, image) {
 		}
 	}
 }
-
-var defenderList = [char1, char2, char3, char4];
-
+//check the current game state
 function isRoundOver() {
+
 	if (enemyCharacter.healthPower <= 0) {
 		return true;
 	}
@@ -94,19 +95,15 @@ function didYouWin() {
 	}
 
 }
-
+//perform attack and counter attack functions based on logic check for whether all characters are alive or one is dead
 function attackRound() {
 	enemyCharacter.healthLoss(playerCharacter.attack());
-	console.log(enemyCharacter);
 	if (!isRoundOver()) {
 		playerCharacter.healthLoss(enemyCharacter.counterAttack());
 		if (playerCharacter.healthPower <= 0) {
 			deadCharacter = playerCharacter;
 			playerCharacter = 0;
-			console.log(deadCharacter.name + "dead character");
 		}
-
-		console.log(playerCharacter.healthPower + "player character health");
 	}
 	else {
 		if (enemyCharacter.healthPower <= 0) {
@@ -133,10 +130,11 @@ function initGame() {
 }
 
 function choosePlayerCharacter(remove) {
-	//if a good guy has not been chosen yet, character is good guy
+	//return an array of length 1 containing the chosen player character, then get the value in that array
+	//this also shortens defenderList at remove index
 	playerCharacter = defenderList.splice(remove, 1);
 	playerCharacter = playerCharacter[0];
-	console.log(playerCharacter.name + "choosePlayerCharacter choice");
+
 }
 
 
@@ -146,93 +144,85 @@ function chooseEnemyCharacter(remove) {
 }
 
 function indexToRemove(char) {
+	//determine which index needs to be spliced from defenderList
 	var remove;
-	console.log(typeof (char) + "type of char and char is " + char);
 	for (var i = 0; i < defenderList.length; i++) {
-		// console.log(defenderList[i].name + "defenderList stuff that's going on" + typeof (defenderList[i].name));
-		console.log(defenderList[i].name + " === " + char);
-		// console.log(typeof (defenderList[i].name + ))
-		console.log(defenderList[i].name === char);
 		if (defenderList[i].name === char) {
 			remove = i;
 		}
 	}
-	console.log(remove + " removed index");
+
 	return remove;
 };
-
+//functions for game printing
 var appearance = {
 	initDisplay: function () {
+		//start a new game and draw it
 		initGame();
 		displayGame();
 	},
 	printCharacter: function (id, character, classKey) {
+		//set the html of a passed-in id using output of printCharacterDiv and desired classes
 		id.html(appearance.printCharacterDiv(character, classKey));
 
 
 	},
 	printCharacterDiv: function (character, classKey) {
+		//returns desired html for a character in a bootstrap card, including image, name and health
 		return "<div class='" + classKey + " card'> <img src='" + character.image + "'/><div class=charName>" + character.name + "</div>" + "<div class=charhealth>" + character.healthPower + "</div></div>";
 	},
 	assignPlayerCharacter: function () {
-
-		//if click on something in characterDiv, it goes to playerCharacter area
-		//if click on something in defender area, it goes to enemyCharacter area
-
 		if ($(this).parent().attr("id") === $("#characterDiv").attr("id")) {
-
-			//call choosecharacter maybe
+			//access the clicked image's charName text and save that as the chosen playerCharacter for display as well as pass into choosePlayerCharacter for game
 			var char = $(this).find(".charName").text();
-			console.log(char + "character choice");
 			choosePlayerCharacter(indexToRemove(char));
+			//draw the game
 			displayGame();
 		}
 	},
 
 	assignEnemyCharacter: function () {
+		//do the same as above but for an enemy
 		var eChar = $(this).find(".charName").text();
 		chooseEnemyCharacter(indexToRemove(eChar));
-		console.log(enemyCharacter.name + " enemy character choice");
 		displayGame();
 	},
-
+	//perform an attack, draw the game, print the attack
 	attackStage() {
 		attackRound();
 		displayGame();
 		appearance.printAttack();
-
 	},
 
 	printAttack: function () {
-
+		//print the playerCharacter's stats using deadCharacter and print the enemyCharacter's stats
 		if (playerCharacter === 0) {
 			$("#attackStats").text(deadCharacter.name + " did " + deadCharacter.newAttackPower + " damage against " + enemyCharacter.name + "." + " In return, " + enemyCharacter.name + " did " + enemyCharacter.counterAttackPower + " damage against " + deadCharacter.name + ".");
 		}
+		//print the enemyCharacter's stats using deadCharacter and print the playerCharacter's stats
 		else if (enemyCharacter === 0) {
 			$("#attackStats").text(playerCharacter.name + " did " + playerCharacter.newAttackPower + " damage against " + deadCharacter.name + ".");
 		}
+		//otherwise both fighting characters are alive, print each's stats
 		else {
 			$("#attackStats").text(playerCharacter.name + " did " + playerCharacter.newAttackPower + " damage against " + enemyCharacter.name + "." + " In return, " + enemyCharacter.name + " did " + enemyCharacter.counterAttackPower + " damage against " + playerCharacter.name + ".")
 		}
 	},
 
-
-
 	printWin: function () {
-
+		//give a win statement
 		$("#gameState").prepend("Yay, you won! The world is safe!");
 
 	},
 	printLoss: function () {
+		//give a loss statement
 		$("#gameState").prepend("Oh no, you lost!");
 	}
-	//on click run attack function
-	//onclick init game function
-
 }
-function displayGame() {
-	$("#enemyCharacter").children().empty();
 
+function displayGame() {
+	//each time this is called, empty the previous information and re-draw with most up-to-date
+	$("#enemyCharacter").children().empty();
 	$("#gameState").empty();
 	$("#defenderArea").empty();
 	$("#characterDiv").empty();
@@ -275,31 +265,32 @@ function displayGame() {
 }
 
 function setUpActions() {
+	//turn off all on "click" events in order to turn them on according to game state
 	$(".defender").off("click");
 	$("#attackButton").off("click");
 	$("#resetButton").off("click");
+	//resetButton is available as long as the game is being played
 	$("#resetButton").click(appearance.initDisplay);
-	console.log("hello world");
+	//only other action available is choose a character
 	if (isGameInit()) {
 		$(".defender").click(appearance.assignPlayerCharacter);
-		console.log(isGameInit() + " isGameInit stage");
 	}
+	//only other action available is choose an enemy
 	else if (isPickEnemy()) {
-		console.log(isPickEnemy() + " isPickEnemy state?")
 		$(".defender").click(appearance.assignEnemyCharacter);
 	}
+	//only other action available is attack
 	else if (isAttackStage()) {
-		console.log(isAttackStage() + " isAttack stage")
+
 		$("#attackButton").click(appearance.attackStage);
 	}
 	else if (isGameOver()) {
-		console.log("game is over" + isGameOver());
+
 	}
 }
 
 $(document).ready(function () {
-	//here is where the first user input will be taken by a click event, kicking off the game and setting the machine into motion. No function will be called before this function
+	//set up a game so user may begin play at their leisure
 	initGame();
 	displayGame();
-
 });
