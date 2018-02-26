@@ -123,11 +123,13 @@ function initGame() {
 	playerCharacter = 0;
 	enemyCharacter = 0;
 	deadCharacter = 0;
-	char1 = new Character("Jon Snow", -1, 5, 10, "assets/images/jonsnow.jpg");
-	char2 = new Character("Daenerys Targaryen", 70, 15, 20, "assets/images/daenerysimage.jpeg");
-	char3 = new Character("White Walker", 200, 20, 500, "assets/images/white_walker.jpg");
-	char4 = new Character("Jaime Lannister", 15, 20, 5, "assets/images/jaimelannister.jpg");
+	//name, healthPower, attackPower, counterAttackPower, image
+	char1 = new Character("Jon Snow", 60, 5, 10, "assets/images/jonsnow.jpg");
+	char2 = new Character("Daenerys Targaryen", 70, 4, 15, "assets/images/daenerysimage.jpeg");
+	char3 = new Character("White Walker", 150, 1, 6, "assets/images/white_walker.jpg");
+	char4 = new Character("Jaime Lannister", 100, 3, 5, "assets/images/jaimelannister.jpg");
 	defenderList = [char1, char2, char3, char4];
+
 }
 
 function choosePlayerCharacter(remove) {
@@ -275,6 +277,7 @@ function displayGame() {
 function setUpActions() {
 	$(".defender").off("click");
 	$("#attackButton").off("click");
+	$("#resetButton").off("click");
 	$("#resetButton").click(appearance.initDisplay);
 	console.log("hello world");
 	if (isGameInit()) {
